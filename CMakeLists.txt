@@ -102,6 +102,13 @@ endif()
 
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
 
+# --shell-file=../shell.html above is a raw linker flag string, invisible to
+# CMake/Ninja's own dependency graph - editing shell.html alone (e.g. The
+# Multitude's own toolbar/theme changes) does NOT trigger a relink without
+# this, silently leaving a stale vAmiga.html/js/wasm behind ("ninja: no work
+# to do" even though shell.html genuinely changed - confirmed the hard way).
+set_target_properties(vAmiga PROPERTIES LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/shell.html")
+
 #run local webserver
 if("${thread_type}" STREQUAL "worker")
 	#run worker version on local webserver

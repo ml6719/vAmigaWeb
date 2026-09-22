@@ -80,14 +80,22 @@ function scaleVMCanvas() {
 
     //reserve space for the docked live memory view (if open)
     var reserved = (typeof memview_reserved_width === 'function') ? memview_reserved_width() : 0;
-    var avail_width  = window.innerWidth - reserved;
+    //reserve space for The Multitude's permanent left sidebar (desktop only -
+    //see css/multitude-theme.css/js, which define this the same way the
+    //memory view above reserves its own space, rather than us touching this
+    //upstream file's own layout math beyond adding the equivalent left-side
+    //term)
+    var sidebar_reserved = (typeof mx_sidebar_reserved_width === 'function') ? mx_sidebar_reserved_width() : 0;
+    var avail_width  = window.innerWidth - reserved - sidebar_reserved;
     var avail_height = window.innerHeight;
     var wratio = avail_width / avail_height;
 
-    //shrink the horizontal centering box (left:0 .. right:reserved) so the
-    //canvas (margin:auto) centers within the available left area instead of
-    //the full viewport and is not covered by the memory view panel
+    //shrink the horizontal centering box (left:sidebar_reserved ..
+    //right:reserved) so the canvas (margin:auto) centers within the
+    //available middle area instead of the full viewport and is not covered
+    //by the sidebar or the memory view panel
     $("#canvas").css("right", reserved + 'px');
+    $("#canvas").css("left", sidebar_reserved + 'px');
 
     var topPos=0;
     if(wratio < src_ratio)

@@ -1,0 +1,102 @@
+/**
+ * The Multitude: reskins vAmigaWeb's own #navbar/#navgrid into the same
+ * left-sidebar convention every other machine's shell uses (see
+ * machines/_shared/src/toolbar.css) - hamburger-triggered full-width
+ * dropdown on narrow screens (unchanged from upstream, just recoloured),
+ * permanent left sidebar once there's width to spare. No element id is
+ * touched, so vAmiga_ui.js's jQuery bindings (#button_reset, #button_run,
+ * the ROM modal, settings, etc.) all keep working unmodified.
+ */
+:root {
+  --darkbg: #1a1b2e;
+  --lightbg: #1a1b2e;
+}
+[data-theme="dark"] #navbar {
+  background-color: #1a1b2e;
+  opacity: 1;
+}
+
+.mx-home {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-family: monospace;
+  font-size: 13px;
+  background: #262842;
+  color: #edebf5;
+  border: 1px solid #565a82;
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin: 0 4px 8px;
+}
+
+#button_show_menu {
+  background: #262842 !important;
+  color: #edebf5 !important;
+  border: 1px solid #565a82 !important;
+  border-radius: 4px;
+}
+
+@media (min-width: 700px) {
+  /* Permanent sidebar instead of Bootstrap's collapse-hidden-by-default
+     panel - same override pattern our shared toolbar.css uses
+     (`.mx-toolbar { display: flex !important; }`) to beat the framework's
+     own default at this breakpoint. */
+  #navbar {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    padding: 56px 8px 12px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 2px solid #43456a;
+    backdrop-filter: none;
+  }
+  #navgrid * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #navgrid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+  .left, .right {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .left > *, .right > * {
+    height: auto;
+    min-height: 40px;
+    justify-content: flex-start;
+    width: 100%;
+    margin: 0;
+  }
+  .left > span[style*="width: 40px"] {
+    /* was a spacer reserving room for the hamburger in the old top-bar
+       layout - the sidebar no longer needs it since the hamburger is
+       hidden at this breakpoint (see below). */
+    display: none;
+  }
+  #theFileInput {
+    grid-column: unset;
+  }
+  #button_show_menu {
+    /* !important: upstream's own JS sets an inline display:inline-block on
+       this element at boot, which otherwise beats any external stylesheet
+       rule regardless of specificity (confirmed via computed style). */
+    display: none !important;
+  }
+}
