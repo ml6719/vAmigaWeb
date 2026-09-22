@@ -56,8 +56,14 @@
        machines/_shared/src/toolbar.css) and adds the Home link - loaded
        after vAmiga.css so its overrides win. Touches layout/color only,
        never an element id vAmiga_ui.js's jQuery selectors depend on. -->
-  <link rel="stylesheet" href="css/multitude-theme.css">
-  <script src="js/multitude-theme.js"></script>
+  <!-- ?v= cache-busts these two on every real change - Cloudflare Pages'
+       default Cache-Control for non-HTML static assets under this prebuilt
+       (fixed-filename) machine ignores site/_headers overrides, confirmed
+       by testing (js/css kept serving max-age=14400 regardless of the
+       _headers rule), so a query-string bump is the reliable fix. Bump the
+       number whenever either file changes. -->
+  <link rel="stylesheet" href="css/multitude-theme.css?v=2">
+  <script src="js/multitude-theme.js?v=2"></script>
   <script src="js/jquery-3.7.1.min.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/vAmiga_browser.js"></script>
