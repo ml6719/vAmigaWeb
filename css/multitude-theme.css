@@ -15,6 +15,13 @@
   background-color: #1a1b2e;
   opacity: 1;
 }
+#navbar {
+  /* Clears the hamburger (fixed top-left) - upstream's own horizontal
+     layout used a spacer span for this instead of padding, which we hide
+     unconditionally above since the stacked list doesn't need it. */
+  padding-top: 56px;
+  box-sizing: border-box;
+}
 
 .mx-home {
   display: block;
@@ -38,6 +45,61 @@
   border-radius: 4px;
 }
 
+/* Vertical stacked list, one control per row - applies at EVERY width,
+   mobile included. Icon-only made sense in upstream's tightly-packed grid;
+   once each row also carries a text label (see mx-btn-label below,
+   matching "Fullscreen"/"⌨ Keyboard" on every other machine), that grid
+   has no room and wraps/overlaps badly. Mobile keeps Bootstrap's
+   collapse-hidden-by-default full-width dropdown panel (unchanged from
+   upstream) - only what's INSIDE it changes. */
+#navgrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+#navgrid * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.left, .right {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.left > *, .right > * {
+  height: auto;
+  min-height: 40px;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 0;
+  gap: 8px;
+}
+.left > span[style*="width: 40px"] {
+  /* was a spacer reserving room for the hamburger in the old horizontal
+     layout - the stacked list doesn't need it (the hamburger sits above
+     the panel, not inline with the first button). */
+  display: none;
+}
+.mx-btn-label {
+  font-family: monospace;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.mx-select-label {
+  font-family: monospace;
+  font-size: 12px;
+  color: #b8b8c8;
+  padding: 0 4px 2px;
+}
+#theFileInput {
+  grid-column: unset;
+}
+
 @media (min-width: 700px) {
   /* Permanent sidebar instead of Bootstrap's collapse-hidden-by-default
      panel - same override pattern our shared toolbar.css uses
@@ -57,57 +119,6 @@
     overflow-x: hidden;
     border-right: 2px solid #43456a;
     backdrop-filter: none;
-  }
-  #navgrid * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  .left > *, .right > * {
-    /* icon + label side by side, like every other machine's toolbar
-       buttons (e.g. "Fullscreen", "⌨ Keyboard") instead of a bare icon. */
-    gap: 8px;
-  }
-  .mx-btn-label {
-    font-family: monospace;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-  .mx-select-label {
-    font-family: monospace;
-    font-size: 12px;
-    color: #b8b8c8;
-    padding: 0 4px 2px;
-  }
-  #navgrid {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-  }
-  .left, .right {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  .left > *, .right > * {
-    height: auto;
-    min-height: 40px;
-    justify-content: flex-start;
-    width: 100%;
-    margin: 0;
-  }
-  .left > span[style*="width: 40px"] {
-    /* was a spacer reserving room for the hamburger in the old top-bar
-       layout - the sidebar no longer needs it since the hamburger is
-       hidden at this breakpoint (see below). */
-    display: none;
-  }
-  #theFileInput {
-    grid-column: unset;
   }
   #button_show_menu {
     /* !important: upstream's own JS sets an inline display:inline-block on

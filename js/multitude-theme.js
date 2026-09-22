@@ -65,3 +65,33 @@ function mx_label_navbar_buttons() {
 // via the .mx-btn-label guard above if it already ran).
 document.addEventListener('DOMContentLoaded', mx_label_navbar_buttons);
 setTimeout(mx_label_navbar_buttons, 1500);
+
+// Default to AROS instead of asking every time: upstream shows the
+// "Amiga Operating System ROM" modal and waits for the user to pick
+// something whenever no ROM is cached yet (MSG_ROM_MISSING in
+// vAmiga_ui.js). AROS is already the right default (open, free, boots on
+// its own) - just install it automatically the same way the modal's own
+// "install free replacements" dropdown does (fetchOpenROMS('aros')),
+// and hide the modal if it already opened. Once a ROM is cached in
+// browser storage, this never fires again (load_roms(true) succeeds
+// first). Anyone who wants a different ROM (their own real Kickstart,
+// or EmuTOS) can still get to the same picker via Settings -> "kickstart
+// roms..." - nothing is removed, just no longer forced on first visit.
+(function () {
+    let tries = 0;
+    const maxTries = 30; // ~9s at 300ms - Module/wasm_rom_info need real boot time
+    const poll = setInterval(() => {
+        tries++;
+        if (typeof wasm_rom_info !== 'function') {
+            if (tries >= maxTries) clearInterval(poll);
+            return;
+        }
+        clearInterval(poll);
+        let info;
+        try { info = JSON.parse(wasm_rom_info()); } catch (e) { return; }
+        if (info.hasRom === 'false' && typeof fetchOpenROMS === 'function') {
+            fetchOpenROMS('aros');
+            if (typeof $ !== 'undefined') $('#modal_roms').modal('hide');
+        }
+    }, 300);
+})();
