@@ -46,3 +46,4 @@ sw.js
 
 node_modules/
 
+build-wasm/
