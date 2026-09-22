@@ -62,6 +62,22 @@
     max-width: 100%;
     box-sizing: border-box;
   }
+  .left > *, .right > * {
+    /* icon + label side by side, like every other machine's toolbar
+       buttons (e.g. "Fullscreen", "⌨ Keyboard") instead of a bare icon. */
+    gap: 8px;
+  }
+  .mx-btn-label {
+    font-family: monospace;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .mx-select-label {
+    font-family: monospace;
+    font-size: 12px;
+    color: #b8b8c8;
+    padding: 0 4px 2px;
+  }
   #navgrid {
     display: flex;
     flex-direction: column;
@@ -98,5 +114,12 @@
        this element at boot, which otherwise beats any external stylesheet
        rule regardless of specificity (confirmed via computed style). */
     display: none !important;
+  }
+  /* The on-screen keyboard is also position:fixed + width:100% (see
+     vAmiga.css) - same left-edge overlap problem the canvas had, same fix:
+     reserve the sidebar's width. */
+  #virtual_keyboard {
+    left: 220px;
+    width: calc(100% - 220px);
   }
 }
