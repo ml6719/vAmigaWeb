@@ -47,3 +47,8 @@ sw.js
 node_modules/
 
 build-wasm/
+
+# Mechanically synced from machines/_shared/src/ by the parent repo's
+# build-site.mjs on every build - never hand-edit or commit a copy here.
+toolbar.css
+toolbar-dom.js
